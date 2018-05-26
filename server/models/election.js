@@ -27,7 +27,8 @@ const electionSchema = new Schema({
     },
     tour:{
         type: Number,
-        required: true
+        required: true,
+        default: 1
     }
 });
 
