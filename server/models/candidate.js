@@ -19,6 +19,10 @@ const candidateSchema = new Schema({
     votes_count: {
         type: Number,
         required: true
+    },
+    _election: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
     }
 });
 
