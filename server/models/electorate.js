@@ -10,6 +10,10 @@ const electorateSchema = new Schema({
         type: Boolean,
         required: true,
         default: false
+    },
+    _election: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
     }
 });
 
