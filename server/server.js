@@ -61,9 +61,11 @@ app.post('/election', authenticate, (req, res) => {
     } else {
         const election = new Election(body);
         election.save().then((doc) => {
-        res.status(200).send(doc);
+            Electorate.create_electorates(doc.electorate_count, doc._id).then((electorates) => {
+                res.status(200).send(doc);
+            });
         }).catch((err) => {
-            res.status(400).send(err);
+            res.status(400).send(err.message);
         });
     }
 

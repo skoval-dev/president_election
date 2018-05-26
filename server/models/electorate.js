@@ -2,10 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const electorateSchema = new Schema({
-    unique_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
-    },
     voted: {
         type: Boolean,
         required: true,
@@ -16,6 +12,15 @@ const electorateSchema = new Schema({
         required: true
     }
 });
+
+electorateSchema.statics.create_electorates = function(count, election_id){
+    const electorate = this;
+    let arr_electorate = [];
+    for(var i = 0; i < count; i++){
+        arr_electorate.push({_election: election_id});
+    }
+    return electorate.insertMany(arr_electorate);
+};
 
 const Electorate = mongoose.model('Electorate', electorateSchema);
 
