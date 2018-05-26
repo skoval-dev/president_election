@@ -16,9 +16,11 @@ const electionSchema = new Schema({
         type: Date,
         required: true,
     },
-    state: {
+    state: { 
         type: String,
-        required: true
+        enum : [ 'Open', 'Closed', 'Finished' ],
+        required: true,
+        lowercase: true
     },
     electorate_count: {
         type: Number,
