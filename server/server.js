@@ -146,6 +146,24 @@ app.patch('/election/:id', authenticate, (req, res) => {
     });
 });
 
+app.patch('/electorate/:id', authenticate, (req, res) => {
+    let id = req.params && req.params.id;
+    if(id && !ObjectID.isValid(id)) {
+        return res.status(404).send({message: `The id: <${id}> is not valid!`, success: false})
+    }
+    //Filter props from body based on provided in arr
+    let body = _.pick(req.body, ['voted']);
+
+    Electorate.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).then((electorate) => {
+        if(!electorate){
+            return res.status(404).send({message: `There is not found electorate by id <${id}>`, success: false});
+        }
+        res.status(200).send({electorate, success: true});
+    }).catch((err) => {
+        res.status(400).send({message: err.message, success: false});
+    });
+});
+
 app.get('*', function(req, res){
     res.status(404).send({message: "The route is not found"});
 });
