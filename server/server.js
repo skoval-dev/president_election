@@ -136,7 +136,7 @@ app.patch('/election/:id', authenticate, (req, res) => {
 
     Election.findOneAndUpdate({_id: id}, {$set: body}, {new: true}).then((election) => {
         if(!election){
-            return res.status(404).send({message: `There are not found election by id <${id}>`, success: false});
+            return res.status(404).send({message: `There is not found election by id <${id}>`, success: false});
         }
         res.status(200).send({election, success: true});
     }).catch((err) => {
