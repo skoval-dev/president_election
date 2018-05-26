@@ -18,7 +18,7 @@ const electionSchema = new Schema({
     },
     state: { 
         type: String,
-        enum : [ 'Open', 'Closed', 'Finished' ],
+        enum : [ 'open', 'closed', 'finished' ],
         required: true,
         lowercase: true
     },
