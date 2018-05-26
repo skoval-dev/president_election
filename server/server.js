@@ -6,6 +6,9 @@ const   body_parser  = require('body-parser');
 
 const          {db}  = require('./db/mongoose');
 const    {ObjectID}  = require('mongodb');
+const   {Candidate}  = require('./models/candidate');
+const    {Election}  = require('./models/election');
+const  {Electorate}  = require('./models/electorate');
 
 const           app  = express();
 const          port  = process.env.PORT;
