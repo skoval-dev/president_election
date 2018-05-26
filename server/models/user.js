@@ -15,7 +15,8 @@ const User_Schema = new Schema({
         },
         required: true,
         trim: true,
-        unique: true
+        //unique: true,
+        dropDups: true
     },
     password: {
         type: String,

@@ -9,6 +9,8 @@ const    {ObjectID}  = require('mongodb');
 const   {Candidate}  = require('./models/candidate');
 const    {Election}  = require('./models/election');
 const  {Electorate}  = require('./models/electorate');
+const        {User}  = require('./models/user');
+const {authenticate} = require('./middleware/authenticate');
 
 const           app  = express();
 const          port  = process.env.PORT;
