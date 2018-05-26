@@ -1,8 +1,15 @@
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './App.vue'
+import Election from './Election'
+import router from './router'
 
 Vue.config.productionTip = false
 
+/* eslint-disable no-new */
 new Vue({
-  render: h => h(App)
-}).$mount('#app')
+  el: '#election',
+  router,
+  components: { Election },
+  template: '<Election/>'
+})
