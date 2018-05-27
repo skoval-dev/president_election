@@ -279,7 +279,7 @@ app.patch('/candidate/add_vote/:id', electorate_auth, (req, res) => {
         if(!candidate){
             return res.status(404).send({message: `There is not found candidate by id <${id}>`, success: false});
         }
-        Electorate.made_vote(req.electorate.token).then((doc) => {
+        Electorate.made_vote(req.electorate._id).then((doc) => {
             res.status(200).send({candidate, success: true});
         });
     }).catch((err) => {

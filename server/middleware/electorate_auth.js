@@ -7,7 +7,7 @@ const electorate_auth = (req, res, next) => {
     }
     Electorate.findOne({_id: id, voted: false}).then((electorate) => {
         if(!electorate){
-            return Promise.reject('You can not make vote!');
+            return Promise.reject('You can not make a vote or already did it!');
         }
 
         req.electorate = electorate;
