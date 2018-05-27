@@ -1,13 +1,19 @@
 <template>
   <div class="admin">
+    <!-- <admin-nav></admin-nav> -->
     <h2>{{msg}}</h2>
-    <router-link to="/">Link to Election</router-link>
+    <!-- <router-link to="/">Link to Election</router-link> -->
   </div>
 </template>
 
 <script>
+import admin_nav from './admin/admin_nav';
+
 export default {
   name: 'Admin',
+  components: {
+    "admin-nav": admin_nav
+  },
   data () {
     return {
       msg: 'Hi, this is and Admin page'
