@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import UserService from '../services/UserService'
 import admin_nav from './admin/admin_nav';
 import auth from './admin/auth';
 
@@ -25,9 +25,11 @@ export default {
   },
 
   created () {
-    axios.get('http://localhost:3000/users/me')
+    UserService.check(this.$store.state.auth.token)
       .then((response) => {
-        console.log(response);
+        if(!response.data.success){
+          this.$store.commit('show_signup', false)
+        }
       }).catch((e) => {
         console.log(e);
       })
