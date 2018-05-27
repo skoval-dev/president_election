@@ -59,7 +59,12 @@ module.exports = {
     },
     allowedHosts: [
       'http://localhost:3000'
-    ]
+    ],
+    proxy: [{
+      context: ["/users", "/candidate", "/electorate", "/election"],
+      target: "http://localhost:3000",
+      secure: false
+    }]
   },
   performance: {
     hints: false
