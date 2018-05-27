@@ -1,17 +1,16 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <router-link to="/">Back to home</router-link>
+  <div class="admin">
+    <h2>{{msg}}</h2>
+    <router-link to="/">Link to Election</router-link>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'About',
+  name: 'Admin',
   data () {
     return {
-      msg: 'This is an about page'
+      msg: 'Hi, this is and Admin page'
     }
   }
 }
