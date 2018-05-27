@@ -19,6 +19,12 @@ const          port  = process.env.PORT;
 app.use(body_parser.json());
 app.use(morgan('dev'));
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 app.post('/users', (req, res) => {
     let body = _.pick(req.body, ['email', 'password']);
     if(_.isEmpty(body)){
@@ -35,7 +41,7 @@ app.post('/users', (req, res) => {
 });
 
 app.get('/users/me', authenticate, (req, res) => {
-    res.send(req.user);
+    res.send({user: req.user, success: true});
 });
 
 app.post('/users/login', (req, res) => {
@@ -45,7 +51,7 @@ app.post('/users/login', (req, res) => {
     }
     User.find_by_credentials(body.email, body.password).then((user) => {
         user.generate_auth_token().then((token) => {
-            res.header('x-auth', token).status(200).send(user);
+            res.header('x-auth', token).status(200).send({user, success: true});
         });
 
     }).catch((err) => {
@@ -67,15 +73,15 @@ app.post('/election', authenticate, (req, res) => {
         return res.status(403).send({message: `The fields are not suitable to process`, success: false});
     }
     if(body['end_date'] <= body['start_date']){
-        res.status(400).send({'message': 'The end date should be more than start date'});
+        res.status(400).send({'message': 'The end date should be more than start date', success: false});
     } else {
         const election = new Election(body);
         election.save().then((doc) => {
             Electorate.create_electorates(doc.electorate_count, doc._id).then((electorates) => {
-                res.status(200).send(doc);
+                res.status(200).send({doc, success: true});
             });
         }).catch((err) => {
-            res.status(400).send(err.message);
+            res.status(400).send({message:err.message, success: false});
         });
     }
 
@@ -165,11 +171,11 @@ app.get('/electorate/login/:id', (req, res) => {
     }
     Electorate.findOne({_id: id}).then((electorate) => {
         if(!electorate){
-           return res.status(401).send({message:"You don't have access to current election"});
+           return res.status(401).send({message:"You don't have access to current election", success: false});
         }
         res.header('x-elec-id', id).status(200).send(electorate);
     }).catch((err) => {
-        res.status(400).send(err);
+        res.status(400).send({message: err.message, success: false});
     });
 });
 
@@ -182,7 +188,7 @@ app.post('/candidate', authenticate, (req, res) => {
     candidate.save().then((doc) => {
         res.status(200).send(doc);
     }).catch((err) => {
-        res.status(400).send(err.message);
+        res.status(400).send({message: err.message, success: false});
     });
 
 });
@@ -289,7 +295,7 @@ app.patch('/candidate/add_vote/:id', electorate_auth, (req, res) => {
 });
 
 app.get('*', function(req, res){
-    res.status(404).send({message: "The route is not found"});
+    res.status(404).send({message: "The route is not found", success: false});
 });
 
 app.listen(port, () => {
