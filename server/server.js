@@ -3,7 +3,7 @@ require('./config/config');
 const _              = require('lodash');
 const       express  = require('express');
 const   body_parser  = require('body-parser');
-
+const         morgan = require('morgan');
 const          {db}  = require('./db/mongoose');
 const    {ObjectID}  = require('mongodb');
 const   {Candidate}  = require('./models/candidate');
@@ -17,6 +17,7 @@ const           app  = express();
 const          port  = process.env.PORT;
 
 app.use(body_parser.json());
+app.use(morgan('dev'));
 
 app.post('/users', (req, res) => {
     let body = _.pick(req.body, ['email', 'password']);
