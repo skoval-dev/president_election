@@ -1,23 +1,36 @@
 <template>
-  <div class="admin">
-    <!-- <admin-nav></admin-nav> -->
-    <h2>{{msg}}</h2>
-    <!-- <router-link to="/">Link to Election</router-link> -->
-  </div>
+  <b-container class="admin bv-example-row bv-example-row-flex-cols">
+      <b-row align-v="center" align-h="center" v-if="!auth" >
+        <auth v-if="!auth"></auth>
+      </b-row>
+  </b-container>
 </template>
 
 <script>
+import axios from 'axios'
 import admin_nav from './admin/admin_nav';
+import auth from './admin/auth';
 
 export default {
   name: 'Admin',
   components: {
-    "admin-nav": admin_nav
+    "admin-nav": admin_nav,
+    auth
   },
   data () {
     return {
-      msg: 'Hi, this is and Admin page'
+      msg: 'Hi, this is and Admin page',
+      auth: false
     }
+  },
+
+  created () {
+    axios.get('http://localhost:3000/users/me')
+      .then((response) => {
+        console.log(response);
+      }).catch((e) => {
+        console.log(e);
+      })
   }
 }
 </script>

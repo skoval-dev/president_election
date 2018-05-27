@@ -1,8 +1,8 @@
 <template>
   <b-row class="justify-content-md-center" align-v="center">
-    <b-form @submit="onSubmit" v-if="login_show">
+    <b-form @submit="onSubmit" v-if="auth_show">
         <b-row align-h="center">
-            <b-form-text><h1>Login</h1></b-form-text>
+            <b-form-text><h1>Sign Up</h1></b-form-text>
         </b-row>
       <b-form-group id="login_email"
                     label-size="sm"
@@ -28,22 +28,22 @@
                       placeholder="*****">
         </b-form-input>
       </b-form-group>
-      <b-button type="submit" class="btn btn-light">Login</b-button>
-      <b-button type="reset" class="btn btn-light" @click="onSignup">Sign Up</b-button>
+      <b-button type="submit" class="btn btn-light">Submit</b-button>
+      <b-button type="button" class="btn btn-light" @click="back_to_login">Back to login</b-button>
     </b-form>
   </b-row>
 </template>
 
 <script>
 export default {
-  name: "login",
+  name: "signup",
   data() {
     return {
       form: {
         email: "",
         password: ""
       },
-      login_show: true
+      auth_show: true
     };
   },
   methods: {
@@ -51,8 +51,8 @@ export default {
       evt.preventDefault();
       alert(JSON.stringify(this.form));
     },
-    onSignup(evt) {
-      return this.$store.commit('show_signup', true)
+    back_to_login(evt) {
+      return this.$store.commit('show_signup', false)
     }
   }
 };
