@@ -7,7 +7,7 @@ export default (token) => {
     validateStatus: function (status) {
       return status <= 401;
     },
-    headers: {'x-auth': token},
+    headers: {'x-auth': token || ''},
     proxy: {
       host: 'http://localhost',
       port: 3000
