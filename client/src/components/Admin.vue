@@ -7,6 +7,7 @@
         </b-col>
         <b-col sm></b-col>
     </b-row>
+    <hr/>
     <b-row>
         <b-col sm="12"  align-h="center">
           <router-view></router-view>
