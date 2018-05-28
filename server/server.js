@@ -22,15 +22,20 @@ app.use(morgan('dev'));
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "*");
+    res.header("Access-Control-Allow-Methods", "*");
     res.header("Accept-Encoding", "gzip, deflate, br");
     res.header("Accept", "*");
     next();
 });
 
 app.post('/users', (req, res) => {
-    let body = _.pick(req.body, ['email', 'password']);
+    let body = _.pick(req.body, ['email', 'password', 'password_again']);
+    
     if(_.isEmpty(body)){
         return res.status(403).send({message: `The fields are not suitable to process`, success: false});
+    }
+    if(body.password !== body["password_again"]){
+        return res.status(403).send({message: `Password doesn't match`, success: false});
     }
     let user = new User(body);
     user.save().then(() => {
