@@ -4,22 +4,21 @@ import Admin from '../components/Admin'
 import Auth from '../components/Login'
 import Signup from '../components/Signup'
 import Election from '../components/Election'
-import store from '../store/store'
-
+import store from '../store'
 Vue.use(Router)
 
 const ifNotAuthenticated = (to, from, next) => {
     if (!store.getters.isAuthenticated) {
-      next()
-      return
+        next()
+        return
     }
-    next('/')
+    next('/admin')    
   }
   
   const ifAuthenticated = (to, from, next) => {
     if (store.getters.isAuthenticated) {
-      next()
-      return
+        next()
+        return
     }
     next('/login')
   }

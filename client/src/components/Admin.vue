@@ -1,7 +1,7 @@
 <template>
   <b-container class="admin bv-example-row bv-example-row-flex-cols">
       <b-row align-v="center" align-h="center">
-
+          
       </b-row>
   </b-container>
 </template>

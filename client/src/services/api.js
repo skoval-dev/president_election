@@ -1,14 +1,16 @@
 import axios from 'axios'
-const token = localStorage.getItem('admin-token')
-if (token) {
-  axios.defaults.headers.common['x-auth'] = token
-}
+const token = localStorage.getItem('admin-token') || '';
+
 export default () => {
   return axios.create({
     baseURL: 'http://localhost:3000',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
+    validateStatus: function (status) {
+      return status < 400;
+    },
+    headers: {'x-auth': token},
+    proxy: {
+      host: 'http://localhost',
+      port: 3000
     }
   });
 }

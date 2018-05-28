@@ -22,6 +22,8 @@ app.use(morgan('dev'));
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "*");
+    res.header("Accept-Encoding", "gzip, deflate, br");
+    res.header("Accept", "*");
     next();
 });
 
@@ -34,7 +36,7 @@ app.post('/users', (req, res) => {
     user.save().then(() => {
         return user.generate_auth_token();
     }).then((token) => {
-        res.header('x-auth', token).status(200).send(user);
+        res.header('x-auth', token).status(200).send({user, token});
     }).catch((err) => {
         res.status(400).send({message: err.message, success: false});
     })
@@ -51,11 +53,12 @@ app.post('/users/login', (req, res) => {
     }
     User.find_by_credentials(body.email, body.password).then((user) => {
         user.generate_auth_token().then((token) => {
-            res.header('x-auth', token).status(200).send({user, success: true});
+            user.token = token;
+            res.header('x-auth', token).status(200).send({user, token, success: true});
         });
 
     }).catch((err) => {
-        res.status(400).send(err);
+        res.status(401).send(err);
     });
 });
 
