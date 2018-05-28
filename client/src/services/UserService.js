@@ -4,12 +4,12 @@ export default {
     return api().post('users', payload);
   },
   check(token) {
-    return api().get('/users/me', {headers: {'x-auth': token}});
+    return api(token).get('/users/me');
   },
   login(payload) {
     return api().post('/users/login', payload);
   },
   logout(token) {
-    return api().delete('/users/me/token', {headers: {'x-auth': token}});
+    return api(token).delete('/users/me/token');
   }
 }
