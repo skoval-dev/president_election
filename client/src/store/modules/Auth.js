@@ -23,7 +23,7 @@ const actions = {
           axios({url: 'auth', data: user, method: 'POST' })
             .then(resp => {
               const token = resp.data.token
-              localStorage.setItem('user-token', token) // store the token in localstorage
+              localStorage.setItem('admin-token', token) // store the token in localstorage
               commit(AUTH_SUCCESS, token)
               // you have your token, now log in your user :)
               dispatch(USER_REQUEST)
@@ -31,7 +31,7 @@ const actions = {
             })
           .catch(err => {
             commit(AUTH_ERROR, err)
-            localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
+            localStorage.removeItem('admin-token') // if the request fails, remove any possible user token if possible
             reject(err)
           })
         })
@@ -39,7 +39,7 @@ const actions = {
     [AUTH_LOGOUT]: ({commit, dispatch}) => {
         return new Promise((resolve, reject) => {
             commit(AUTH_LOGOUT)
-            localStorage.removeItem('user-token') // clear your user's token from localstorage
+            localStorage.removeItem('admin-token') // clear your user's token from localstorage
             resolve()
         })
     }
@@ -52,7 +52,7 @@ const getters = {
 
 export default {
     state: {
-        token: localStorage.getItem('user-token') || '',
+        token: localStorage.getItem('admin-token') || '',
         status: ''
     },
     mutations,
