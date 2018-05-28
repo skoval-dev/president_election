@@ -1,8 +1,17 @@
 <template>
   <b-container class="admin bv-example-row bv-example-row-flex-cols">
-      <b-row align-v="center" align-h="center">
-          
-      </b-row>
+    <b-row class="mb-3">
+        <b-col sm></b-col>
+         <b-col sm="12"  align-h="center">
+          <admin-nav align-h="center"></admin-nav>
+        </b-col>
+        <b-col sm></b-col>
+    </b-row>
+    <b-row>
+        <b-col sm="12"  align-h="center">
+          <router-view></router-view>
+        </b-col>
+    </b-row>
   </b-container>
 </template>
 

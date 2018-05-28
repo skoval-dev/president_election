@@ -18,6 +18,10 @@ const mutations = {
   [AUTH_ERROR]: (state) => {
     state.status = 'error'
   },
+  [AUTH_LOGOUT]: (state) => {
+    state.status = 'logged_out',
+    state.token = ''
+  },
 }
 
 const actions = {
@@ -89,9 +93,13 @@ const actions = {
     dispatch
   }) => {
     return new Promise((resolve, reject) => {
-      commit(AUTH_LOGOUT)
-      localStorage.removeItem('admin-token') // clear your user's token from localstorage
-      resolve()
+      var token = localStorage.getItem('x-auth')
+      userService.logout(token)
+      .then(resp => {
+        localStorage.removeItem('x-auth') // clear your user's token from localstorage
+        commit(AUTH_LOGOUT)
+        resolve()
+      })
     })
   }
 }

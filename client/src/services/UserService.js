@@ -8,5 +8,8 @@ export default {
   },
   login(payload) {
     return api().post('/users/login', payload);
+  },
+  logout(token) {
+    return api().delete('/users/me/token', {headers: {'x-auth': token}});
   }
 }
