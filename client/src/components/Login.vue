@@ -64,7 +64,9 @@ export default {
         const { email, password } = this.form
         this.$store.dispatch('AUTH_REQUEST', this.form).then(() => {
             this.$router.push('/admin/election')
+            console.log('Check login')
         }).catch((e) => {
+          console.log(e);
             if(e.response){
                 this.error.message = e.response.data.message;
             } else  {

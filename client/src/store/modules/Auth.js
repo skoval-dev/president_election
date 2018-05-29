@@ -34,10 +34,11 @@ const actions = {
       userService.login(user)
         .then(resp => {
           const token = resp.data.token;
+          if(!token){
+            return reject(resp.data);
+          }
           localStorage.setItem('x-auth', token) // store the token in localstorage
           commit(AUTH_SUCCESS, token)
-          // you have your token, now log in your user :)
-          //dispatch('USER_REQUEST')
           resolve(resp)
         })
         .catch(err => {

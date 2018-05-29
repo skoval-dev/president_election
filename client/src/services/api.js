@@ -5,7 +5,7 @@ export default (token) => {
   return axios.create({
     baseURL: 'http://localhost:3000',
     validateStatus: function (status) {
-      return status <= 401;
+      return status <= 402;
     },
     headers: {'x-auth': token || ''},
     proxy: {
