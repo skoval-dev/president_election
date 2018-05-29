@@ -56,7 +56,7 @@
                 {{error.message}}
               </v-alert>
               <v-card-actions>
-                <v-spacer><v-spacer><v-btn outline @click="transfer('login')" color="indigo">Back to login</v-btn></v-spacer></v-spacer>
+                <v-spacer><v-spacer><v-btn outline @click="transfer('login')" color="indigo"><v-icon dark left>arrow_back</v-icon>Back to login</v-btn></v-spacer></v-spacer>
                 <v-btn  color="primary" @click="submit">Sign Up</v-btn>
               </v-card-actions>
             </v-card>
