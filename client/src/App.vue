@@ -1,48 +1,21 @@
 <template>
-  <div id="app">
     <router-view></router-view>
-  </div>
 </template>
 
 <script>
-export default {
-  name: 'app',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+  export default {
+    name: 'app',
+    data() {
+      return {
+        msg: 'Welcome to Your Vue.js App',
+        links: ['Home', 'About Us', 'Team', 'Services', 'Blog', 'Contact Us']
+      }
+    },
+    created() {
+      this.$store.dispatch('AUTH_CHECK_REQUEST').then().catch((e) => {
+        console.log(JSON.stringify(e))
+      });
     }
-  },
-  created () {
-    this.$store.dispatch('AUTH_CHECK_REQUEST').then().catch((e) => {console.log(JSON.stringify(e))});
-  }  
-}
+  }
+
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
-</style>
