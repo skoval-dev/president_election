@@ -83,7 +83,7 @@
           turpis.
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" :flat=true @click="accept" v-if="isDisabled">Accept</v-btn>
+            <v-btn color="green darken-1" :flat=true @click="accept('isDisabled')" v-if="isDisabled">Accept</v-btn>
           </v-card-actions>
         </v-card-text>
       </v-card>
@@ -93,9 +93,21 @@
       <h4>Confirmation</h4>
       <span>Should use yor personal number</span>
     </v-stepper-step>
-    <v-stepper-content step="2">
-      <v-card color="grey lighten-1" class="mb-5" height="200px"></v-card>
-      <v-btn color="primary" @click.native="step = 3">Continue</v-btn>
+    <v-stepper-content step="2" xs3>
+      <h2 v-if="form.confirm" style="color: #1E88E5">
+        Thank you, for successful confirmation!
+      </h2>
+      <v-layout>
+        <v-flex xs3>
+          <form v-if="!form.confirm">
+            <v-text-field v-model="form.elect_number" :error-messages="elect_number_errors" :counter="10" label="Confirmation Number"
+              required @input="$v.form.elect_number.$touch()" @blur="$v.form.elect_number.$touch()"></v-text-field>
+            <v-spacer></v-spacer>
+            <v-btn @click="submit" v-if="!form.confirm">Confirm</v-btn>
+          </form>
+        </v-flex>
+      </v-layout>
+      <v-btn color="primary" @click.native="step = 3" :disabled=isDisabled_2 v-if="form.confirm">Continue</v-btn>
     </v-stepper-content>
     <v-stepper-step :complete="step > 3" step="3">
       <h4>Candidates</h4>
@@ -131,74 +143,86 @@
       <span>Be sure that none is watching on your choice</span>
     </v-stepper-step>
     <v-stepper-content step="4">
-       
+
       <v-btn color="primary">Continue</v-btn>
     </v-stepper-content>
   </v-stepper>
 </template>
 <script>
+  import {
+    validationMixin
+  } from 'vuelidate'
+  import {
+    required,
+    maxLength
+  } from 'vuelidate/lib/validators'
   export default {
+    mixins: [validationMixin],
+    validations: {
+      form: {
+        elect_number: {
+          required,
+          maxLength: maxLength(10)
+        }
+      }
+    },
     data() {
       return {
         step: 1,
         isDisabled: true,
-        elec_choice: '',
+        isDisabled_2: true,
         candidates: {
-            messages: [
-                {
-                avatar: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460',
-                name: 'John Leider',
-                title: 'Welcome to Vuetify.js!',
-                excerpt: 'Thank you for joining our community...'
-                },
-                {
-                color: 'red',
-                icon: 'people',
-                name: 'Social',
-                new: 1,
-                total: 3,
-                title: 'Twitter'
-                },
-                {
-                color: 'teal',
-                icon: 'local_offer',
-                name: 'Promos',
-                new: 2,
-                total: 4,
-                title: 'Shop your way',
-                exceprt: 'New deals available, Join Today'
-                }
-            ],
-            lorem: 'Lorem ipsum dolor sit amet, at aliquam vivendum vel, everti delicatissimi cu eos. Dico iuvaret debitis mel an, et cum zril menandri. Eum in consul legimus accusam. Ea dico abhorreant duo, quo illum minimum incorrupte no, nostro voluptaria sea eu. Suas eligendi ius at, at nemore equidem est. Sed in error hendrerit, in consul constituam cum.'
+          messages: [{
+              avatar: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460',
+              name: 'John Leider',
+              title: 'Welcome to Vuetify.js!',
+              excerpt: 'Thank you for joining our community...'
+            },
+            {
+              color: 'red',
+              icon: 'people',
+              name: 'Social',
+              new: 1,
+              total: 3,
+              title: 'Twitter'
+            },
+            {
+              color: 'teal',
+              icon: 'local_offer',
+              name: 'Promos',
+              new: 2,
+              total: 4,
+              title: 'Shop your way',
+              exceprt: 'New deals available, Join Today'
+            }
+          ],
+          lorem: 'Lorem ipsum dolor sit amet, at aliquam vivendum vel, everti delicatissimi cu eos. Dico iuvaret debitis mel an, et cum zril menandri. Eum in consul legimus accusam. Ea dico abhorreant duo, quo illum minimum incorrupte no, nostro voluptaria sea eu. Suas eligendi ius at, at nemore equidem est. Sed in error hendrerit, in consul constituam cum.'
         },
+        form: {
+          elect_number: '',
+          confirm: false
+        }
       }
     },
-    created () {
-      this.initialize()
+    computed: {
+      elect_number_errors() {
+        const errors = []
+        if (!this.$v.form.elect_number.$dirty) return errors
+        !this.$v.form.elect_number.required && errors.push(
+          'You must confirm your availability to make a vote!');
+        !this.$v.form.elect_number.maxLength && errors.push('Confirmation number must be at most 10 characters long')
+        return errors
+      }
     },
     methods: {
-        editItem(){
-
-        },
-        accept () {
-        return this.isDisabled = false;
-        },
-        initialize () {
-        this.desserts = [
-            {
-            name: 'Frozen Yogurt',
-            },
-            {
-            name: 'Ice cream sandwich',
-            },
-            {
-            name: 'Eclair',
-            },
-            {
-            name: 'Cupcake',
-            }
-        ]
-        },
+      submit() {
+        this.form.confirm = true;
+        this.isDisabled_2 = false;
+        this.$v.$touch()
+      },
+      accept(name) {
+        return this[name] = false;
+      },
     }
   }
 
