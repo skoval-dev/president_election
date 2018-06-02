@@ -1,29 +1,73 @@
 <template>
-  <div class="electorate">
-    <h1>Test 2!</h1>
-  </div>
+  <v-data-table
+    :headers="headers"
+    :items="electorates"
+    class="elevation-1"
+  >
+    <template slot="headerCell" slot-scope="props">
+      <v-tooltip bottom>
+        <span slot="activator">
+          {{ props.header.text }}
+        </span>
+        <span>
+          {{ props.header.text }}
+        </span>
+      </v-tooltip>
+    </template>
+    <template slot="items" slot-scope="props">
+      <td>{{ props.item._id }}</td>
+      <td class="text-xs-right">{{ props.item.voted }}</td>
+      <td class="text-xs-right">{{ props.item._election }}</td>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
-module.exports = {
-  name: 'admin-electorate'
-}
+  export default {
+    data () {
+      return {
+        headers: [
+          {
+            text: 'ID',
+            align: 'left',
+            value: '_id'
+          },
+          { text: 'Voted', value: 'voted' },
+          { text: 'Election', value: '_election'}
+        ],
+        electorates: [
+          {
+            _id: "5b0a8d2b210eaa30806b0a5b",
+            voted: true,
+            _election: "5b0a8d2b210eaa30806b0a5a"
+          },
+          {
+            _id: "5b0a8d2b210eaa30806b0a5d",
+            voted: false,
+            _election: "5b0a8d2b210eaa30806b0a5a"
+          },
+          {
+            _id: "5b0a8d2b210eaa30806b0a5e",
+            voted: true,
+            _election: "5b0a8d2b210eaa30806b0a5a"
+          },
+          {
+            _id: "5b0a8d2b210eaa30806b0a5f",
+            voted: false,
+            _election: "5b0a8d2b210eaa30806b0a5a"
+          },
+          {
+            _id: "5b0aa1101628fd1b50eed357",
+            voted: false,
+            _election: "5b0a8d2b210eaa30806b0a5a"
+          },
+          {
+            _id: "5b0aa1101628fd1b50eed359",
+            voted: true,
+            _election: "5b0a8d2b210eaa30806b0a5a"
+          }
+        ]
+      }
+    }
+  }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
