@@ -81,6 +81,7 @@
     </v-dialog>
     <v-data-table :headers="headers" :items="elections" hide-actions class="elevation-1">
       <template slot="items" slot-scope="props">
+        <td class="text-xs-right">{{ props.item._id }}</td>
         <td class="text-xs-right">{{ props.item.election_name }}</td>
         <td class="text-xs-right">{{ props.item.start_date }}</td>
         <td class="text-xs-right">{{ props.item.end_date }}</td>
@@ -111,8 +112,12 @@
         'open', 'closed', 'finished'
       ],
       headers: [{
-          text: 'Election Name',
+          text: 'ID',
           align: 'left',
+          value: '_id'
+        },
+        {
+          text: 'Election Name',
           value: 'election_name'
         },
         {
@@ -174,6 +179,7 @@
     methods: {
       initialize() {
         this.elections = [{
+          _id: '5b0aa60f1aac413fb0dc69ed',
           election_name: 'Ukraine Election 2018',
           start_date: '2018-06-12',
           end_date: '2018-06-15',
