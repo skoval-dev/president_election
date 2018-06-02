@@ -1,131 +1,215 @@
 <template>
-  <div class="election">
-    <h1>Manage Election</h1>
-    <hr/>
-    <b-container id="create-election" class="admin bv-example-row bv-example-row-flex-cols">
-      <b-row class="mb-3">
-      <b-col sm="2" style="border-right: 1px solid #333;">
-          <button class="btn btn secondary mb-3" @click="toggle_form">Create Election</button>
-          <button class="btn btn secondary mb-3" @click="show_list">Election List</button>
-      </b-col>
-      <b-col sm="5" offset-sm="2"  align-h="center">
-          <b-form v-if="show_form" align-h="center">
-            <b-form-group id="name"
-                          label="Election Name"
-                          label-for="name">
-              <b-form-input id="name"
-                            type="text"
-                            v-model="form.name"
-                            required
-                            placeholder="Enter election name">
-              </b-form-input>
-            </b-form-group>
-            <b-form-group id="start_date"
-                          label="Start Date:"
-                          label-for="start_date">
-              <b-form-input id="start_date"
-                            type="date"
-                            v-model="form.start_date"
-                            required>
-              </b-form-input>
-            </b-form-group>
-            <b-form-group id="end_date"
-                          label="End Date:"
-                          label-for="end_date">
-              <b-form-input id="end_date"
-                            type="date"
-                            v-model="form.end_date"
-                            required>
-              </b-form-input>
-            </b-form-group>
-            <b-form-group id="state"
-                          label="State:"
-                          label-for="state">
-              <b-form-select id="state"
-                            :options="form.state.options"
-                            required
-                            v-model="form.state.selected">
-              </b-form-select>
-            </b-form-group>
-            <b-form-group id="electorate_count"
-                          label="Electorates Count:"
-                          label-for="electorate_count">
-              <b-form-input id="electorate_count"
-                            type="number"
-                            required
-                            v-model="form.electorate_count">
-              </b-form-input>
-            </b-form-group>
-            <b-button type="button" @click="create" variant="primary">Save</b-button>
-          </b-form>
-      </b-col>
-      </b-row>
-    </b-container>
+  <div>
+    <v-dialog v-model="dialog" max-width="500px">
+      <v-btn slot="activator" color="primary" dark class="mb-2">Create Election</v-btn>
+      <v-card>
+        <v-card-title>
+          <span class="headline">{{form_title}}</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12>
+                <v-text-field v-model="edited_item.election_name" label="Election Name"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6>
+                  <v-menu
+                    ref="start_date"
+                    :close-on-content-click="false"
+                    v-model="start_date"
+                    :nudge-right="40"
+                    :return-value.sync="edited_item.start_date"
+                    lazy
+                    transition="scale-transition"
+                    offset-y
+                    full-width
+                    min-width="290px"
+                  >
+                    <v-text-field
+                      slot="activator"
+                      v-model="edited_item.start_date"
+                      label="Start Date"
+                      prepend-icon="event"
+                      readonly
+                    ></v-text-field>
+                    <v-date-picker v-model="edited_item.start_date" @input="$refs.start_date.save(edited_item.start_date)"></v-date-picker>
+                  </v-menu>
+              </v-flex>
+              <v-flex xs12 sm6>
+                <v-menu
+                    ref="end_date"
+                    :close-on-content-click="false"
+                    v-model="end_date"
+                    :nudge-right="40"
+                    :return-value.sync="edited_item.end_date"
+                    lazy
+                    transition="scale-transition"
+                    offset-y
+                    full-width
+                    min-width="290px"
+                  >
+                    <v-text-field
+                      slot="activator"
+                      v-model="edited_item.end_date"
+                      label="End Date"
+                      prepend-icon="event"
+                      readonly
+                    ></v-text-field>
+                    <v-date-picker v-model="edited_item.end_date" @input="$refs.end_date.save(edited_item.end_date)"></v-date-picker>
+                  </v-menu>
+              </v-flex>
+              <v-flex xs12 sm6>
+                <v-select
+                  :items="states"
+                  v-model="edited_item.state"
+                  label="State"
+                  single-line
+                ></v-select>
+              </v-flex>
+              <v-flex xs12 sm6>
+                <v-text-field v-model="edited_item.electorate_count" label="Electorate Count"></v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
+          <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-data-table :headers="headers" :items="elections" hide-actions class="elevation-1">
+      <template slot="items" slot-scope="props">
+        <td class="text-xs-right">{{ props.item.election_name }}</td>
+        <td class="text-xs-right">{{ props.item.start_date }}</td>
+        <td class="text-xs-right">{{ props.item.end_date }}</td>
+        <td class="text-xs-right">{{ props.item.state }}</td>
+        <td class="text-xs-right">{{ props.item.electorate_count }}</td>
+        <td class="justify-center layout px-0">
+          <v-btn icon class="mx-0" @click="editItem(props.item)">
+            <v-icon color="teal">edit</v-icon>
+          </v-btn>
+          <v-btn icon class="mx-0" @click="deleteItem(props.item)">
+            <v-icon color="pink">delete</v-icon>
+          </v-btn>
+        </td>
+      </template>
+      <template slot="no-data">
+        <v-btn color="primary" @click="initialize">Reset</v-btn>
+      </template>
+    </v-data-table>
   </div>
 </template>
-
 <script>
-module.exports = {
-  name: "admin-election",
-  data () {
-    return {
-      form: {
-        start_date: new Date(),
-        name: '',
-        end_date: new Date(),
-        electorate_count: 0,
-        state: {
-          selected:null,
-          options: [
-            { text: 'Select One', value: null},
-            'Open', 'Closed', 'Finished'
-          ]
+  export default {
+    data: () => ({
+      dialog: false,
+      start_date: false,
+      end_date: false,
+      states: [
+        'open', 'closed', 'finished'
+      ],
+      headers: [{
+          text: 'Election Name',
+          align: 'left',
+          value: 'election_name'
+        },
+        {
+          text: 'Start Date',
+          value: 'start_date'
+        },
+        {
+          text: 'End Date',
+          value: 'end_date'
+        },
+        {
+          text: 'State',
+          value: 'state'
+        },
+        {
+          text: 'Electorate Count',
+          value: 'electorate_count'
+        },
+        {
+          text: 'Actions',
+          value: 'name',
+          sortable: false
         }
+      ],
+      elections: [],
+      editedIndex: -1,
+      edited_item: {
+        election_name: '',
+        start_date: '',
+        end_date: '',
+        state: 0,
+        electorate_count: 0
       },
-      show_form: true
-    }
-  },
-  methods: {
-    toggle_form(){
-      this.show_form = !this.show_form;
+      defaultItem: {
+        election_name: '',
+        start_date: '',
+        end_date: '',
+        state: '',
+        electorate_count: ''
+      }
+    }),
+
+    computed: {
+      form_title() {
+        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      }
     },
-    show_list(){
-      this.show_form = !this.show_form;
+
+    watch: {
+      dialog(val) {
+        val || this.close()
+      }
     },
-    create (evt) {
-      evt.preventDefault();
-      alert(JSON.stringify(this.form));
+
+    created() {
+      this.initialize()
     },
-    onReset (evt) {
-      evt.preventDefault();
-      /* Reset our form values */
-      this.form.email = '';
-      this.form.name = '';
-      this.form.food = null;
-      this.form.checked = [];
-      /* Trick to reset/clear native browser form validation state */
-      this.show = false;
-      this.$nextTick(() => { this.show = true });
+
+    methods: {
+      initialize() {
+        this.elections = [{
+          election_name: 'Ukraine Election 2018',
+          start_date: '2018-06-12',
+          end_date: '2018-06-15',
+          state: 'closed',
+          electorate_count: '23000000'
+        }]
+      },
+
+      editItem(item) {
+        this.editedIndex = this.elections.indexOf(item)
+        this.edited_item = Object.assign({}, item)
+        this.dialog = true
+      },
+
+      deleteItem(item) {
+        const index = this.elections.indexOf(item)
+        confirm('Are you sure you want to delete this item?') && this.elections.splice(index, 1)
+      },
+
+      close() {
+        this.dialog = false
+        setTimeout(() => {
+          this.edited_item = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        }, 300)
+      },
+
+      save() {
+        if (this.editedIndex > -1) {
+          Object.assign(this.elections[this.editedIndex], this.edited_item)
+        } else {
+          this.elections.push(this.edited_item)
+        }
+        this.close()
+      }
     }
   }
-};
-</script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1,
-h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
+</script>
